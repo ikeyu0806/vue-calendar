@@ -1,18 +1,24 @@
 <template>
-  <v-row justify="center" align="center">
-    <table>
-      <thead>
-        <tr>
-          <th v-for="week in weeks" v-bind:key="week.id">{{ week.value }}</th>
-        </tr>
-        <tr v-for="(week, index) in calendars" :key="index">
-          <td v-for="(day, index) in week" :key="index">
-            {{ day.date }}
-          </td>
-        </tr>
-      </thead>
-    </table>
-  </v-row>
+  <div>
+    <v-row justify="center" align="center">
+      <h2>{{ currentDate }}</h2>
+    </v-row>
+    <br />
+    <v-row justify="center" align="center">
+      <table>
+        <thead>
+          <tr>
+            <th v-for="week in weeks" v-bind:key="week.id">{{ week.value }}</th>
+          </tr>
+          <tr v-for="(week, index) in calendars" :key="index">
+            <td v-for="(day, index) in week" :key="index">
+              {{ day.date }}
+            </td>
+          </tr>
+        </thead>
+      </table>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -32,6 +38,13 @@ export default {
     }
   },
   computed: {
+    currentDate () {
+      const dt = new Date();
+      // jsのgetMonthが0-11なので1加算
+      const month = dt.getMonth() + 1
+      const result = this.year() + '年' + month + '月'
+      return result
+    },
     calendars () {
       return this.renderCalendar()
     }
@@ -83,7 +96,6 @@ export default {
               // 曜日を使ってつじつま合わせ
               date: lastMonthEndDate - (-day + 1)
             })
-            console.log(lastMonthEndDate)
           }
         }
         calendars.push(weekRow)
