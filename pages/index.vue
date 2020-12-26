@@ -21,13 +21,13 @@ export default {
   data () {
     return {
       weeks: [
+        { id: 0, value: 'SUNDAY' },
         { id: 1, value: 'MONDAY' },
         { id: 2, value: 'TUESDAY' },
         { id: 3, value: 'WEDNESDAY' },
         { id: 4, value: 'THURSDAY' },
         { id: 5, value: 'FRIDAY' },
-        { id: 6, value: 'SATURDAY' },
-        { id: 7, value: 'SUNDAY' }
+        { id: 6, value: 'SATURDAY' }
       ]
     }
   },
@@ -53,24 +53,36 @@ export default {
       return this.startDate().getDay()
     },
     startDate () {
-      return new Date(this.year(), this.month() - 1, 1)
+      return new Date(this.date().getFullYear(), this.date().getMonth(), 1)
     },
     endDate () {
       return new Date(this.year(), this.month(), 0)
     },
     renderCalendar () {
       let startDate = this.startDate()
+      let startDay = this.startDay()
       let currentDate = startDate
       const calendars = []
-      for(let i=0;i<7;i++){
+      for(let i = 0; i < 5; i++){
         let weekRow = []
         for (let day = 0; day < 7; day++) {
-          weekRow.push({
-            date: currentDate.getDate()
-          })
-          currentDate.setDate(currentDate.getDate() + 1)
-          console.log(currentDate)
-          console.log(weekRow)
+          console.log("startday", startDay)
+          console.log("i", i)
+          console.log("day", day)
+          console.log("weekRow", weekRow)
+          console.log("比較", day > startDay)
+          console.log("currentDate", currentDate.getDate())
+          console.log("currentDay", currentDate.getDay())
+          if (i > 0 || (i === 0 && day >= startDay)) {
+            weekRow.push({
+              date: currentDate.getDate()
+            })
+            currentDate.setDate(currentDate.getDate() + 1)
+          } else {
+            weekRow.push({
+              date: ''
+            })
+          }
         }
         calendars.push(weekRow)
       }
