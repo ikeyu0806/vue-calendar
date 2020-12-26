@@ -58,21 +58,21 @@ export default {
     endDate () {
       return new Date(this.year(), this.month(), 0)
     },
+    lastMonthEndDate () {
+      const dt = this.date()
+      return new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
+    },
     renderCalendar () {
       let startDate = this.startDate()
       let startDay = this.startDay()
       let currentDate = startDate
+      const lastMonthEndDate = this.lastMonthEndDate()
+
       const calendars = []
+
       for(let i = 0; i < 5; i++){
         let weekRow = []
         for (let day = 0; day < 7; day++) {
-          console.log("startday", startDay)
-          console.log("i", i)
-          console.log("day", day)
-          console.log("weekRow", weekRow)
-          console.log("比較", day > startDay)
-          console.log("currentDate", currentDate.getDate())
-          console.log("currentDay", currentDate.getDay())
           if (i > 0 || (i === 0 && day >= startDay)) {
             weekRow.push({
               date: currentDate.getDate()
@@ -80,8 +80,10 @@ export default {
             currentDate.setDate(currentDate.getDate() + 1)
           } else {
             weekRow.push({
-              date: ''
+              // 曜日を使ってつじつま合わせ
+              date: lastMonthEndDate - (-day + 1)
             })
+            console.log(lastMonthEndDate)
           }
         }
         calendars.push(weekRow)
