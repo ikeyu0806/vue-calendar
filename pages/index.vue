@@ -17,10 +17,10 @@
       <table>
         <thead>
           <tr>
-            <th v-for="week in weeks" :key="week.id">{{ week.value }}</th>
+            <th v-for="week in weeks" :key="week.id" :class="{sunday: week.id === 0}">{{ week.value }}</th>
           </tr>
           <tr v-for="(week, index) in calendars" :key="index">
-            <td v-for="(day, index) in week" :key="index">
+            <td v-for="(day, index) in week" :key="index" :class="{sunday: index === 0}">
               {{ day.date }}
             </td>
           </tr>
@@ -37,6 +37,9 @@
 }
 .month-select {
   margin-right: 10px;
+}
+.sunday {
+  color: red;
 }
 th {
     border: 1px solid #ddd;
