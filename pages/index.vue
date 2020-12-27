@@ -79,7 +79,7 @@ export default {
   methods: {
     prevMonth () {
       this.currentMonth === 0 ? this.currentMonth = 11 : this.currentMonth--
-      this.currentMonth === 0 && this.currentYear--
+      this.currentMonth === 11 && this.currentYear--
       this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
       const dt = new Date(this.currentYear, this.currentMonth, 1)
       this.startDate = dt
