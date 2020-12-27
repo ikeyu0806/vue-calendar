@@ -93,8 +93,8 @@ export default {
       const startDay = this.startDay
       const currentDate = this.startDate
       const lastMonthEndDate = this.lastMonthEndDate
-
       const calendars = []
+      let lastDateCount = startDay - 1
 
       for(let i = 0; i < 5; i++){
         let weekRow = []
@@ -107,8 +107,9 @@ export default {
           } else {
             weekRow.push({
               // 曜日を使ってつじつま合わせ
-              date: lastMonthEndDate - (-day + 1)
+              date: lastMonthEndDate - lastDateCount
             })
+            lastDateCount--
           }
         }
         calendars.push(weekRow)
