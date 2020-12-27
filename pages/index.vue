@@ -1,9 +1,14 @@
 <template>
   <div>
     <v-row justify="center" align="center">
-      <h2>{{ dateTitle }}</h2>
-      <button @click="prevMonth">前の月</button>
-      <button @click="nextMonth">次の月</button>
+      <v-col><h3 id="date-title">{{ dateTitle }}</h3></v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+      <v-col>
+        <button @click="prevMonth">前の月</button>
+        <button @click="nextMonth">次の月</button>
+      </v-col>
     </v-row>
     <br />
     <v-row justify="center" align="center">
@@ -22,6 +27,23 @@
     </v-row>
   </div>
 </template>
+
+<style>
+/* eslint-disable */
+#date-title {
+  margin-left: 60px;
+}
+th {
+    border: 1px solid #ddd;
+    padding: 30px;
+    text-align: center;
+}
+td {
+    border: 1px solid #ddd;
+    padding: 30px;
+    text-align: center;
+}
+</style>
 
 <script>
 export default {
