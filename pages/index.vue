@@ -40,7 +40,7 @@ export default {
       startDay: new Date(this.date().getFullYear(), this.date().getMonth(), 1).getDay(),
       startDate: new Date(this.date().getFullYear(), this.date().getMonth(), 1),
       currentMonth: this.date().getMonth(),
-      currentYear: this.date().getYear(),
+      currentYear: this.date().getFullYear(),
       lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate()
     }
   },
@@ -59,21 +59,20 @@ export default {
     prevMonth () {
       this.currentMonth === 0 ? this.currentMonth = 11 : this.currentMonth--
       this.currentMonth === 0 && this.currentYear--
-      const dt = new Date(this.currentMonth, this.currentMonth, 1)
+      this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
+      const dt = new Date(this.currentYear, this.currentMonth, 1)
       this.startDate = dt
       this.startDay = dt.getDay()
       this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
-      this.renderCalendar()
-      this.renderCalendar()
     },
     nextMonth () {
       this.currentMonth === 11 ? this.currentMonth = 0 : this.currentMonth++
       this.currentMonth === 0 && this.currentYear++
-      const dt = new Date(this.currentMonth, this.currentMonth, 1)
+      this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
+      const dt = new Date(this.currentYear, this.currentMonth, 1)
       this.startDate = dt
       this.startDay = dt.getDay()
       this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
-      this.renderCalendar()
     },
     date () {
       return new Date()
@@ -91,9 +90,8 @@ export default {
       return this.endDate().getDay()
     },
     renderCalendar () {
-      let startDate = this.startDate
-      let startDay = this.startDay
-      const currentDate = startDate
+      const startDay = this.startDay
+      const currentDate = this.startDate
       const lastMonthEndDate = this.lastMonthEndDate
 
       const calendars = []
