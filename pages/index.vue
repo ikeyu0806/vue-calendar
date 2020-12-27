@@ -6,8 +6,10 @@
       <v-col></v-col>
       <v-col></v-col>
       <v-col>
-        <button @click="prevMonth">前の月</button>
-        <button @click="nextMonth">次の月</button>
+        <div class="month-select">
+          <span @click="prevMonth"><v-btn dark outlined>前の月</v-btn></span>
+          <span @click="nextMonth"><v-btn dark outlined>次の月</v-btn></span>
+        </div>
       </v-col>
     </v-row>
     <br />
@@ -32,6 +34,9 @@
 /* eslint-disable */
 #date-title {
   margin-left: 60px;
+}
+.month-select {
+  margin-right: 10px;
 }
 th {
     border: 1px solid #ddd;
