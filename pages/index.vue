@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-row justify="center" align="center">
-      <h2>{{ currentDate }}</h2>
+      <h2>{{ dateTitle }}</h2>
+      <button @click="prevMonth">前の月</button>
+      <button @click="nextMonth">次の月</button>
     </v-row>
     <br />
     <v-row justify="center" align="center">
@@ -34,11 +36,14 @@ export default {
         { id: 4, value: 'THURSDAY' },
         { id: 5, value: 'FRIDAY' },
         { id: 6, value: 'SATURDAY' }
-      ]
+      ],
+      startDay: new Date(this.date().getFullYear(), this.date().getMonth(), 1).getDay(),
+      startDate: new Date(this.date().getFullYear(), this.date().getMonth(), 1),
+      lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate()
     }
   },
   computed: {
-    currentDate () {
+    dateTitle () {
       const dt = new Date();
       // jsのgetMonthが0-11なので1加算
       const month = dt.getMonth() + 1
@@ -50,6 +55,20 @@ export default {
     }
   },
   methods: {
+    prevMonth () {
+      const dt = new Date(this.date().getFullYear(), this.date().getMonth() - 1, 1);
+      this.startDate = dt
+      this.startDay = dt.getDay()
+      this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
+      this.renderCalendar()
+    },
+    nextMonth () {
+      const dt = new Date(this.date().getFullYear(), this.date().getMonth() + 1, 1);
+      this.startDate = dt
+      this.startDay = dt.getDay()
+      this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
+      this.renderCalendar()
+    },
     date () {
       return new Date()
     },
@@ -62,24 +81,14 @@ export default {
     endDayCount () {
       return this.endDate().getDay()
     },
-    startDay () {
-      return this.startDate().getDay()
-    },
-    startDate () {
-      return new Date(this.date().getFullYear(), this.date().getMonth(), 1)
-    },
     endDate () {
       return new Date(this.year(), this.month(), 0)
     },
-    lastMonthEndDate () {
-      const dt = this.date()
-      return new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
-    },
     renderCalendar () {
-      let startDate = this.startDate()
-      let startDay = this.startDay()
+      let startDate = this.startDate
+      let startDay = this.startDay
       let currentDate = startDate
-      const lastMonthEndDate = this.lastMonthEndDate()
+      const lastMonthEndDate = this.lastMonthEndDate
 
       const calendars = []
 
