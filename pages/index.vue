@@ -24,7 +24,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 export default {
   data () {
     return {
@@ -96,8 +95,8 @@ export default {
       const calendars = []
       let lastDateCount = startDay - 1
 
-      for(let i = 0; i < 5; i++){
-        let weekRow = []
+      for (let i = 0; i < 5; i++) {
+        const weekRow = []
         for (let day = 0; day < 7; day++) {
           if (i > 0 || (i === 0 && day >= startDay)) {
             weekRow.push({
