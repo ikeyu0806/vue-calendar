@@ -7,8 +7,8 @@
       <v-col></v-col>
       <v-col>
         <div class="month-select">
-          <span @click="prevMonth"><v-btn dark outlined>前の月</v-btn></span>
-          <span @click="nextMonth"><v-btn dark outlined>次の月</v-btn></span>
+          <span @click="prevMonth"><v-btn outlined>前の月</v-btn></span>
+          <span @click="nextMonth"><v-btn outlined>次の月</v-btn></span>
         </div>
       </v-col>
     </v-row>
