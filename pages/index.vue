@@ -1,19 +1,26 @@
 <template>
   <div>
     <v-row justify="center" align="center">
-      <h2>{{ dateTitle }}</h2>
-      <button @click="prevMonth">前の月</button>
-      <button @click="nextMonth">次の月</button>
+      <v-col><h3 id="date-title">{{ dateTitle }}</h3></v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+      <v-col></v-col>
+      <v-col>
+        <div class="month-select">
+          <span @click="prevMonth"><v-btn outlined>前の月</v-btn></span>
+          <span @click="nextMonth"><v-btn outlined>次の月</v-btn></span>
+        </div>
+      </v-col>
     </v-row>
     <br />
     <v-row justify="center" align="center">
       <table>
         <thead>
           <tr>
-            <th v-for="week in weeks" :key="week.id">{{ week.value }}</th>
+            <th v-for="week in weeks" :key="week.id" :class="{sunday: week.id === 0}">{{ week.value }}</th>
           </tr>
           <tr v-for="(week, index) in calendars" :key="index">
-            <td v-for="(day, index) in week" :key="index">
+            <td v-for="(day, index) in week" :key="index" :class="{sunday: index === 0}">
               {{ day.date }}
             </td>
           </tr>
@@ -22,6 +29,29 @@
     </v-row>
   </div>
 </template>
+
+<style>
+/* eslint-disable */
+#date-title {
+  margin-left: 60px;
+}
+.month-select {
+  margin-right: 10px;
+}
+.sunday {
+  color: red;
+}
+th {
+    border: 1px solid #ddd;
+    padding: 30px;
+    text-align: center;
+}
+td {
+    border: 1px solid #ddd;
+    padding: 30px;
+    text-align: center;
+}
+</style>
 
 <script>
 export default {
@@ -57,7 +87,7 @@ export default {
   methods: {
     prevMonth () {
       this.currentMonth === 0 ? this.currentMonth = 11 : this.currentMonth--
-      this.currentMonth === 0 && this.currentYear--
+      this.currentMonth === 11 && this.currentYear--
       this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
       const dt = new Date(this.currentYear, this.currentMonth, 1)
       this.startDate = dt
