@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
   <div>
     <v-row justify="center" align="center">
@@ -43,15 +42,14 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
-              </v-col>
-              <v-col cols="12">
                 <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="6">
+              <v-col cols="12">
                 <v-time-picker
                   format="ampm"
+                  v-model="dialogItems.time"
                 ></v-time-picker>
               </v-col>
             </v-row>
@@ -60,16 +58,16 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
-            color="blue darken-1"
-            text
+            depressed
+            color="error"
             @click="dialog = false"
           >
             Close
           </v-btn>
           <v-btn
-            color="blue darken-1"
-            text
-            @click="dialog = false; dialogItems.title = 'hi'"
+            depressed
+            color="primary"
+            @click="dialog = false"
           >
             Save
           </v-btn>
@@ -126,7 +124,8 @@ export default {
       dialogItems: {
         header_title: '',
         title: '',
-        content: ''
+        content: '',
+        time: ''
       },
     }
   },
