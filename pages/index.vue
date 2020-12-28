@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div>
     <v-row justify="center" align="center">
@@ -20,7 +21,11 @@
             <th v-for="week in weeks" :key="week.id" :class="{sunday: week.id === 0}">{{ week.value }}</th>
           </tr>
           <tr v-for="(week, index) in calendars" :key="index">
-            <td v-for="(day, index) in week" :key="index" :class="{sunday: index === 0}" @click.stop="dialog = true">
+            <td
+              v-for="(day, index) in week"
+              :key="index"
+              :class="{sunday: index === 0}"
+              @click="dialog = true; dialogItems.header_title = currentMonth + '月' + day.date + '日の予定登録'">
               {{ day.date }}
             </td>
           </tr>
@@ -32,32 +37,44 @@
       max-width="600"
       >
       <v-card>
-        <v-card-title>予定登録</v-card-title>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field label="タイトル"></v-text-field>
-            </v-col>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="dialog = false"
-                >
-                  Close
-                </v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="dialog = false"
-                >
-                  Save
-                </v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-row>
-        </v-container>
+        <v-card-title>{{ dialogItems.header_title }}</v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6">
+                <v-time-picker
+                  format="ampm"
+                ></v-time-picker>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false; dialogItems.title = 'hi'"
+          >
+            Save
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
@@ -105,7 +122,12 @@ export default {
       currentMonth: this.date().getMonth(),
       currentYear: this.date().getFullYear(),
       lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate(),
-      dialog: false
+      dialog: false,
+      dialogItems: {
+        header_title: '',
+        title: '',
+        content: ''
+      },
     }
   },
   computed: {
