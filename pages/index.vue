@@ -20,13 +20,46 @@
             <th v-for="week in weeks" :key="week.id" :class="{sunday: week.id === 0}">{{ week.value }}</th>
           </tr>
           <tr v-for="(week, index) in calendars" :key="index">
-            <td v-for="(day, index) in week" :key="index" :class="{sunday: index === 0}">
+            <td v-for="(day, index) in week" :key="index" :class="{sunday: index === 0}" @click.stop="dialog = true">
               {{ day.date }}
             </td>
           </tr>
         </thead>
       </table>
     </v-row>
+    <v-dialog
+      v-model="dialog"
+      max-width="600"
+      >
+      <v-card>
+        <v-card-title>予定登録</v-card-title>
+        <v-container>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field label="タイトル"></v-text-field>
+            </v-col>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog = false"
+                >
+                  Close
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="dialog = false"
+                >
+                  Save
+                </v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-row>
+        </v-container>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -54,6 +87,7 @@ td {
 </style>
 
 <script>
+/* eslint-disable */
 export default {
   data () {
     return {
@@ -70,7 +104,8 @@ export default {
       startDate: new Date(this.date().getFullYear(), this.date().getMonth(), 1),
       currentMonth: this.date().getMonth(),
       currentYear: this.date().getFullYear(),
-      lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate()
+      lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate(),
+      dialog: false
     }
   },
   computed: {
