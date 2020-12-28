@@ -24,7 +24,8 @@
               v-for="(day, index) in week"
               :key="index"
               :class="{sunday: index === 0}"
-              @click="dialog = true; dialogItems.header_title = currentMonth + '月' + day.date + '日の予定登録'">
+              @click="dialog = true;
+              dialogItems.header_title = currentMonth + '月' + day.date + '日の予定登録';">
               {{ day.date }}
             </td>
           </tr>
@@ -43,14 +44,10 @@
               <v-col cols="12">
                 <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
                 <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-time-picker
-                  format="ampm"
-                  v-model="dialogItems.time"
-                ></v-time-picker>
+                <strong>開始時間</strong>
+                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+                <strong>終了時間</strong>
+                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -79,7 +76,6 @@
 </template>
 
 <style>
-/* eslint-disable */
 #date-title {
   margin-left: 60px;
 }
