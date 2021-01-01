@@ -1,0 +1,13 @@
+version: '3'
+services:
+  calendar-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+     - ./:/calendar
+    working_dir: /calendar
+    command: "yarn dev"
+    ports:
+     - "4000:3000"
