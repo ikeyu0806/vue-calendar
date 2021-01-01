@@ -20,18 +20,62 @@
             <th v-for="week in weeks" :key="week.id" :class="{sunday: week.id === 0}">{{ week.value }}</th>
           </tr>
           <tr v-for="(week, index) in calendars" :key="index">
-            <td v-for="(day, index) in week" :key="index" :class="{sunday: index === 0}">
+            <td
+              v-for="(day, index) in week"
+              :key="index"
+              :class="{sunday: index === 0}"
+              @click="dialog = true;
+              dialogItems.header_title = currentMonth + '月' + day.date + '日の予定登録';">
               {{ day.date }}
             </td>
           </tr>
         </thead>
       </table>
     </v-row>
+    <v-dialog
+      v-model="dialog"
+      max-width="600"
+      >
+      <v-card>
+        <v-card-title>{{ dialogItems.header_title }}</v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
+                <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
+                <strong>開始時間</strong>
+                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+                <strong>終了時間</strong>
+                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            depressed
+            color="error"
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            depressed
+            color="primary"
+            @click="dialog = false"
+          >
+            Save
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <style>
-/* eslint-disable */
 #date-title {
   margin-left: 60px;
 }
@@ -54,6 +98,7 @@ td {
 </style>
 
 <script>
+/* eslint-disable */
 export default {
   data () {
     return {
@@ -70,7 +115,14 @@ export default {
       startDate: new Date(this.date().getFullYear(), this.date().getMonth(), 1),
       currentMonth: this.date().getMonth(),
       currentYear: this.date().getFullYear(),
-      lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate()
+      lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate(),
+      dialog: false,
+      dialogItems: {
+        header_title: '',
+        title: '',
+        content: '',
+        time: ''
+      },
     }
   },
   computed: {
