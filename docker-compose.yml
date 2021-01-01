@@ -10,4 +10,4 @@ services:
     working_dir: /calendar
     command: "yarn dev"
     ports:
-     - "4000:3000"
+     - "3001:3000"

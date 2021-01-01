@@ -7,7 +7,7 @@
       <v-col></v-col>
       <v-col>
         <div class="month-select">
-          <span @click="prevMonth"><v-btn outlined>前の月</v-btn></span>
+          <span @click="prevMonth"><v-btn outlined>前の月{{ schedules }}</v-btn></span>
           <span @click="nextMonth"><v-btn outlined>次の月</v-btn></span>
         </div>
       </v-col>
@@ -98,6 +98,7 @@ td {
 </style>
 
 <script>
+import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 /* eslint-disable */
 export default {
   data () {
@@ -196,6 +197,12 @@ export default {
         calendars.push(weekRow)
       }
       return calendars
+    }
+  },
+  apollo: {
+    schedules: {
+      prefetch: true,
+      query: getSchedulesGql
     }
   },
   components: {

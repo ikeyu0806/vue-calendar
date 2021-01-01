@@ -66,7 +66,7 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'http://localhost:3000',
+        httpEndpoint: 'http://localhost:3002/query',
       }
     }
   },
