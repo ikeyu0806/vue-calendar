@@ -25,7 +25,7 @@
               :key="index"
               :class="{sunday: index === 0}"
               @click="dialog = true;
-              dialogItems.header_title = currentMonth + '月' + day.date + '日の予定登録';">
+              dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';">
               {{ day.date }}
             </td>
           </tr>
