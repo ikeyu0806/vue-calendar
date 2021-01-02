@@ -102,7 +102,7 @@ td {
 <script>
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 import createSchedule from '~/apollo/mutations/createSchedule.gql'
-/* eslint-disable */
+
 export default {
   data () {
     return {
@@ -128,7 +128,7 @@ export default {
         start_at: '',
         end_at: '',
         day: ''
-      },
+      }
     }
   },
   computed: {
@@ -204,8 +204,8 @@ export default {
       return calendars
     },
     registerSchedule () {
-      const start_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.start_at
-      const end_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.end_at
+      const startAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.start_at
+      const endAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.end_at
 
       this.$apollo.mutate({
         mutation: createSchedule,
@@ -213,8 +213,8 @@ export default {
           title: this.dialogItems.title,
           content: this.dialogItems.content,
           memo: this.dialogItems.memo,
-          start_at: start_at,
-          end_at: end_at
+          start_at: startAt,
+          end_at: endAt
         }
       })
     }
