@@ -45,6 +45,7 @@
               <v-col cols="12">
                 <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
                 <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
+                <v-text-field label="メモ" v-model="dialogItems.memo"></v-text-field>
                 <strong>開始時間</strong>
                 <v-text-field type="time" name="time" v-model="dialogItems.start_at"></v-text-field>
                 <strong>終了時間</strong>
@@ -209,9 +210,9 @@ export default {
       this.$apollo.mutate({
         mutation: createSchedule,
         variables: {
-          title: this.title,
-          content: this.content,
-          memo: this.memo,
+          title: this.dialogItems.title,
+          content: this.dialogItems.content,
+          memo: this.dialogItems.memo,
           start_at: start_at,
           end_at: end_at
         }
