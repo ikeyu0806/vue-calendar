@@ -4,7 +4,7 @@ query GetSchedules {
         title
         content
         memo
-        StartAt
-        EndAt
+        start_at
+        end_at
     }
 }

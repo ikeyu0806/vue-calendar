@@ -7,7 +7,7 @@
       <v-col></v-col>
       <v-col>
         <div class="month-select">
-          <span @click="prevMonth"><v-btn outlined>前の月{{ schedules }}</v-btn></span>
+          <span @click="prevMonth"><v-btn outlined>前の月</v-btn></span>
           <span @click="nextMonth"><v-btn outlined>次の月</v-btn></span>
         </div>
       </v-col>
@@ -45,9 +45,9 @@
                 <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
                 <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
                 <strong>開始時間</strong>
-                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+                <v-text-field type="time" name="time" v-model="dialogItems.start_at"></v-text-field>
                 <strong>終了時間</strong>
-                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+                <v-text-field type="time" name="time" v-model="dialogItems.end_at"></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -122,7 +122,8 @@ export default {
         header_title: '',
         title: '',
         content: '',
-        time: ''
+        start_at: '',
+        end_at: ''
       },
     }
   },
