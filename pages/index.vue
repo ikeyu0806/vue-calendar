@@ -27,7 +27,8 @@
               @click="dialog = true;
               dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
               dialogItems.day = day.date">
-              {{ day.date }}
+              <div class="date">{{ day.date }}</div>
+              <div class="schedule-title">10:00 予定</div>
             </td>
           </tr>
         </thead>
@@ -86,6 +87,15 @@
 }
 .sunday {
   color: red;
+}
+.date {
+  text-align: left;
+  vertical-align: top;
+}
+.schedule-title {
+  color: black;
+  background-color: aqua;
+  border-radius: 5px;
 }
 th {
     border: 1px solid #ddd;
