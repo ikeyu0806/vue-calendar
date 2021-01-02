@@ -1,0 +1,10 @@
+query GetSchedules {
+    schedules {
+        id
+        title
+        content
+        memo
+        start_at
+        end_at
+    }
+}

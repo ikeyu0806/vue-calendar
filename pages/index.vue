@@ -25,7 +25,8 @@
               :key="index"
               :class="{sunday: index === 0}"
               @click="dialog = true;
-              dialogItems.header_title = currentMonth + '月' + day.date + '日の予定登録';">
+              dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
+              dialogItems.day = day.date">
               {{ day.date }}
             </td>
           </tr>
@@ -44,10 +45,11 @@
               <v-col cols="12">
                 <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
                 <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
+                <v-text-field label="メモ" v-model="dialogItems.memo"></v-text-field>
                 <strong>開始時間</strong>
-                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+                <v-text-field type="time" name="time" v-model="dialogItems.start_at"></v-text-field>
                 <strong>終了時間</strong>
-                <v-text-field type="time" name="time" v-model="dialogItems.time"></v-text-field>
+                <v-text-field type="time" name="time" v-model="dialogItems.end_at"></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -61,13 +63,13 @@
           >
             Close
           </v-btn>
-          <v-btn
+          <span @click="registerSchedule"><v-btn
             depressed
             color="primary"
-            @click="dialog = false"
+            @click="dialog = false;"
           >
             Save
-          </v-btn>
+          </v-btn></span>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -98,6 +100,8 @@ td {
 </style>
 
 <script>
+import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
+import createSchedule from '~/apollo/mutations/createSchedule.gql'
 /* eslint-disable */
 export default {
   data () {
@@ -121,7 +125,9 @@ export default {
         header_title: '',
         title: '',
         content: '',
-        time: ''
+        start_at: '',
+        end_at: '',
+        day: ''
       },
     }
   },
@@ -196,6 +202,27 @@ export default {
         calendars.push(weekRow)
       }
       return calendars
+    },
+    registerSchedule () {
+      const start_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.start_at
+      const end_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.end_at
+
+      this.$apollo.mutate({
+        mutation: createSchedule,
+        variables: {
+          title: this.dialogItems.title,
+          content: this.dialogItems.content,
+          memo: this.dialogItems.memo,
+          start_at: start_at,
+          end_at: end_at
+        }
+      })
+    }
+  },
+  apollo: {
+    schedules: {
+      prefetch: true,
+      query: getSchedulesGql
     }
   },
   components: {
