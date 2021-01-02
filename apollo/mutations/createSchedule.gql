@@ -1,0 +1,11 @@
+mutation registerSchedule (
+  $title: String, $content: String, $memo: String, $start_at: String, $end_at: String
+) {
+  createSchedule(input: { title: $title, content: $content, memo: $memo, start_at: $start_at, end_at: $end_at,  }) {
+    title
+    content
+    memo
+    start_at
+    end_at
+  }
+}

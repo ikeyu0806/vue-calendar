@@ -25,7 +25,8 @@
               :key="index"
               :class="{sunday: index === 0}"
               @click="dialog = true;
-              dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';">
+              dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
+              dialogItems.day = day.date">
               {{ day.date }}
             </td>
           </tr>
@@ -61,13 +62,13 @@
           >
             Close
           </v-btn>
-          <v-btn
+          <span @click="registerSchedule"><v-btn
             depressed
             color="primary"
-            @click="dialog = false"
+            @click="dialog = false;"
           >
             Save
-          </v-btn>
+          </v-btn></span>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -99,6 +100,7 @@ td {
 
 <script>
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
+import createSchedule from '~/apollo/mutations/createSchedule.gql'
 /* eslint-disable */
 export default {
   data () {
@@ -123,7 +125,8 @@ export default {
         title: '',
         content: '',
         start_at: '',
-        end_at: ''
+        end_at: '',
+        day: ''
       },
     }
   },
@@ -198,6 +201,21 @@ export default {
         calendars.push(weekRow)
       }
       return calendars
+    },
+    registerSchedule () {
+      const start_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.start_at
+      const end_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.end_at
+
+      this.$apollo.mutate({
+        mutation: createSchedule,
+        variables: {
+          title: this.title,
+          content: this.content,
+          memo: this.memo,
+          start_at: start_at,
+          end_at: end_at
+        }
+      })
     }
   },
   apollo: {
