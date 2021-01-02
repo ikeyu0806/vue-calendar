@@ -25,13 +25,16 @@ $ yarn start
 $ yarn generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+- For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
 ## docker
+
 ```
 docker-compose up
-# http://localhost:3001/
-```_
+```
+
+3001番ポートからアクセスできます。
+- http://localhost:3001/
 
 ## Author
 Yuki Ikegaya
