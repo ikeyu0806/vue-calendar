@@ -66,13 +66,15 @@
           >
             Close
           </v-btn>
-          <span @click="registerSchedule"><v-btn
-            depressed
-            color="primary"
-            @click="dialog = false;"
-          >
-            Save
-          </v-btn></span>
+          <span @click="registerSchedule" id="schedule-register-btn">
+            <v-btn
+              depressed
+              color="primary"
+              @click="dialog = false;"
+            >
+              Save
+            </v-btn>
+          </span>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -99,6 +101,9 @@
   border-radius: 5px;
   padding: 5px 10px 5px 10px;
   margin: 5px;
+}
+#schedule-register-btn {
+  margin-left: 10px;
 }
 th {
     border: 1px solid #ddd;
