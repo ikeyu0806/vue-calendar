@@ -147,7 +147,9 @@ export default {
         start_at: '',
         end_at: '',
         day: ''
-      }
+      },
+      // 予定登録直後に表示させるためのdata
+      justRegisteredDates: []
     }
   },
   computed: {
@@ -200,8 +202,11 @@ export default {
       const currentDate = String(this.currentYear) + '-' + String(('0' + this.currentMonth + 1).slice(-2)) + '-' + String('0' + Number(date)).slice(-2)
       const regexp = new RegExp('^' + currentDate)
       const matchDates = this.schedules.filter(schedule => schedule.start_at.match(regexp))
-      const result = matchDates.map(date => date.title)
-      return result
+      let titles = matchDates.map(date => date.title)
+      const justRegisterdMatchDates = this.justRegisteredDates.filter(schedule => schedule.start_at.match(regexp))
+      const justRegisteredTitles = justRegisterdMatchDates.map(date => date.title)
+      titles = titles.concat(justRegisteredTitles)
+      return titles
     },
     renderCalendar () {
       const startDay = this.startDay
@@ -233,7 +238,7 @@ export default {
       return calendars
     },
     registerSchedule () {
-      const startAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.start_at
+      const startAt = this.currentYear + '-' + String(('0' + this.currentMonth + 1).slice(-2)) + '-' + String(('0' + this.dialogItems.day).slice(-2)) + ' ' + this.dialogItems.start_at
       const endAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.end_at
 
       this.$apollo.mutate({
@@ -246,6 +251,10 @@ export default {
           end_at: endAt
         }
       })
+
+      const registerdDate = {title:  this.dialogItems.title, start_at: startAt}
+
+      this.justRegisteredDates.push(registerdDate)
     }
   },
   apollo: {
