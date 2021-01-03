@@ -118,7 +118,6 @@ td {
 </style>
 
 <script>
-/* eslint-disable */
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 import createSchedule from '~/apollo/mutations/createSchedule.gql'
 
@@ -203,6 +202,7 @@ export default {
       const regexp = new RegExp('^' + currentDate)
       const matchDates = this.schedules.filter(schedule => schedule.start_at.match(regexp))
       let titles = matchDates.map(date => date.title)
+      // 登録直後の予定をカレンダーに表示させる
       const justRegisterdMatchDates = this.justRegisteredDates.filter(schedule => schedule.start_at.match(regexp))
       const justRegisteredTitles = justRegisterdMatchDates.map(date => date.title)
       titles = titles.concat(justRegisteredTitles)
@@ -252,8 +252,7 @@ export default {
         }
       })
 
-      const registerdDate = {title:  this.dialogItems.title, start_at: startAt}
-
+      const registerdDate = { title: this.dialogItems.title, start_at: startAt }
       this.justRegisteredDates.push(registerdDate)
     }
   },
