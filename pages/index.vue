@@ -91,7 +91,6 @@
   color: red;
 }
 .date {
-  text-align: left;
   vertical-align: top;
 }
 .schedule-title {
