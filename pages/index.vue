@@ -27,7 +27,10 @@
               @click="dialog = true;
               dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
               dialogItems.day = day.date">
-              {{ day.date }}
+              <div class="date">{{ day.date }}</div>
+              <span v-for="(schedule_title, index) in day.schedule_titles" :key="index">
+                <div class="schedule-title">{{ schedule_title }}</div>
+              </span>
             </td>
           </tr>
         </thead>
@@ -63,13 +66,15 @@
           >
             Close
           </v-btn>
-          <span @click="registerSchedule"><v-btn
-            depressed
-            color="primary"
-            @click="dialog = false;"
-          >
-            Save
-          </v-btn></span>
+          <span @click="registerSchedule" id="schedule-register-btn">
+            <v-btn
+              depressed
+              color="primary"
+              @click="dialog = false;"
+            >
+              Save
+            </v-btn>
+          </span>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -87,6 +92,19 @@
 .sunday {
   color: red;
 }
+.date {
+  vertical-align: top;
+}
+.schedule-title {
+  color: black;
+  background-color: aqua;
+  border-radius: 5px;
+  padding: 5px 10px 5px 10px;
+  margin: 5px;
+}
+#schedule-register-btn {
+  margin-left: 10px;
+}
 th {
     border: 1px solid #ddd;
     padding: 30px;
@@ -100,9 +118,10 @@ td {
 </style>
 
 <script>
+/* eslint-disable */
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 import createSchedule from '~/apollo/mutations/createSchedule.gql'
-/* eslint-disable */
+
 export default {
   data () {
     return {
@@ -128,7 +147,7 @@ export default {
         start_at: '',
         end_at: '',
         day: ''
-      },
+      }
     }
   },
   computed: {
@@ -176,6 +195,14 @@ export default {
     endDayCount () {
       return this.endDate().getDay()
     },
+    getScheduleTitle (date) {
+      // 登録したスケジュールの中から該当の日時のタイトルの配列を返すメソッド
+      const currentDate = String(this.currentYear) + '-' + String(('0' + this.currentMonth + 1).slice(-2)) + '-' + String('0' + Number(date)).slice(-2)
+      const regexp = new RegExp('^' + currentDate)
+      const matchDates = this.schedules.filter(schedule => schedule.start_at.match(regexp))
+      const result = matchDates.map(date => date.title)
+      return result
+    },
     renderCalendar () {
       const startDay = this.startDay
       const currentDate = this.startDate
@@ -188,13 +215,15 @@ export default {
         for (let day = 0; day < 7; day++) {
           if (i > 0 || (i === 0 && day >= startDay)) {
             weekRow.push({
-              date: currentDate.getDate()
+              date: currentDate.getDate(),
+              schedule_titles: this.getScheduleTitle(currentDate.getDate())
             })
             currentDate.setDate(currentDate.getDate() + 1)
           } else {
             weekRow.push({
               // 曜日を使ってつじつま合わせ
-              date: lastMonthEndDate - lastDateCount
+              date: lastMonthEndDate - lastDateCount,
+              schedule_titles: this.getScheduleTitle(currentDate.getDate())
             })
             lastDateCount--
           }
@@ -204,8 +233,8 @@ export default {
       return calendars
     },
     registerSchedule () {
-      const start_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.start_at
-      const end_at = this.currentYear + "-0" + (this.currentMonth + 1) + "-" + this.dialogItems.day + " " + this.dialogItems.end_at
+      const startAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.start_at
+      const endAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.end_at
 
       this.$apollo.mutate({
         mutation: createSchedule,
@@ -213,8 +242,8 @@ export default {
           title: this.dialogItems.title,
           content: this.dialogItems.content,
           memo: this.dialogItems.memo,
-          start_at: start_at,
-          end_at: end_at
+          start_at: startAt,
+          end_at: endAt
         }
       })
     }
