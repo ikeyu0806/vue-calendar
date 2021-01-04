@@ -213,6 +213,16 @@ export default {
       titles = titles.concat(justRegisteredTitles)
       return titles
     },
+    // 表示するカレンダーの行数を判定するメソッド
+    // startDayは日曜を0として「0-6」の曜日を指定
+    weekCount (startDay, month) {
+      const bigMoon = [1, 3, 5, 7, 8, 10, 12]
+      // 一旦2月は28日前提
+      // TODO dataのcurrentYearを元にうるう年判定
+      const lastDate = bigMoon.indexOf(month) ? 31 : month === 2 ? 28 : 30
+      const weekCount = Math.ceil((startDay + lastDate + 1) / 7)
+      return weekCount
+    },
     renderCalendar () {
       const startDay = this.startDay
       const currentDate = this.startDate
@@ -220,7 +230,7 @@ export default {
       const calendars = []
       let lastDateCount = startDay - 1
 
-      const weekCount = 6
+      const weekCount = this.weekCount(startDay, this.currentMonth + 1)
 
       for (let i = 0; i < weekCount; i++) {
         const weekRow = []
