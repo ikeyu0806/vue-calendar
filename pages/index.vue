@@ -14,6 +14,7 @@
     </v-row>
     <br />
     <v-row justify="center" align="center">
+      <p>{{ this.startDate }}</p>
       <table>
         <thead>
           <tr>
@@ -120,6 +121,7 @@ td {
 </style>
 
 <script>
+/* eslint-disable */
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 import createSchedule from '~/apollo/mutations/createSchedule.gql'
 
@@ -228,6 +230,7 @@ export default {
             const date = currentDate.getDate()
             const month = (i > 0 && date < 7) ? this.currentMonth + 2 : this.currentMonth + 1
             const year = this.currentYear
+
             weekRow.push({
               date,
               schedule_titles: this.getScheduleTitle(year, month, currentDate.getDate()),
@@ -272,7 +275,7 @@ export default {
 
       const registerdDate = { title: this.dialogItems.title, start_at: startAt }
       this.justRegisteredDates.push(registerdDate)
-      this.startDate = new Date(year, month, this.dialogItems.day)
+      this.startDate = new Date(year, month, 1)
     }
   },
   apollo: {
