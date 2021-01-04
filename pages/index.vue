@@ -219,14 +219,17 @@ export default {
       const calendars = []
       let lastDateCount = startDay - 1
 
-      for (let i = 0; i < 5; i++) {
+      const weekCount = 6
+
+      for (let i = 0; i < weekCount; i++) {
         const weekRow = []
         for (let day = 0; day < 7; day++) {
           if (i > 0 || (i === 0 && day >= startDay)) {
-            const month = this.currentMonth + 1
+            const date = currentDate.getDate()
+            const month = (i > 0 && date < 7) ? this.currentMonth + 2 : this.currentMonth + 1
             const year = this.currentYear
             weekRow.push({
-              date: currentDate.getDate(),
+              date,
               schedule_titles: this.getScheduleTitle(year, month, currentDate.getDate()),
               month,
               year
@@ -234,7 +237,7 @@ export default {
             currentDate.setDate(currentDate.getDate() + 1)
           } else {
             const date = lastMonthEndDate - lastDateCount
-            const month = this.currentMonth === 0 ? 12 : this.currentMonth + 1
+            const month = this.currentMonth === 0 ? 12 : this.currentMonth
             const year = this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear
             weekRow.push({
               // 曜日を使ってつじつま合わせ
