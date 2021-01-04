@@ -14,7 +14,6 @@
     </v-row>
     <br />
     <v-row justify="center" align="center">
-      <p>{{ this.startDate }}</p>
       <table>
         <thead>
           <tr>
@@ -228,6 +227,7 @@ export default {
         for (let day = 0; day < 7; day++) {
           if (i > 0 || (i === 0 && day >= startDay)) {
             const date = currentDate.getDate()
+            // 翌月の範囲かどうか判定
             const month = (i > 0 && date < 7) ? this.currentMonth + 2 : this.currentMonth + 1
             const year = this.currentYear
 
