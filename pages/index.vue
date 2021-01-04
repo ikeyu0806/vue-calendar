@@ -269,6 +269,7 @@ export default {
 
       const registerdDate = { title: this.dialogItems.title, start_at: startAt }
       this.justRegisteredDates.push(registerdDate)
+      this.startDate = new Date(year, month, this.dialogItems.day)
     }
   },
   apollo: {
