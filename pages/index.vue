@@ -26,7 +26,9 @@
               :class="{sunday: index === 0}"
               @click="dialog = true;
               dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
-              dialogItems.day = day.date">
+              dialogItems.day = day.date;
+              dialogItems.year = day.year;
+              dialogItems.month = day.month;">
               <div class="date">{{ day.date }}</div>
               <span v-for="(schedule_title, index) in day.schedule_titles" :key="index">
                 <div class="schedule-title">{{ schedule_title }}</div>
@@ -146,8 +148,12 @@ export default {
         content: '',
         start_at: '',
         end_at: '',
-        day: ''
-      }
+        day: '',
+        year: '',
+        month: ''
+      },
+      // 予定登録直後に表示させるためのdata
+      justRegisteredDates: []
     }
   },
   computed: {
@@ -195,13 +201,27 @@ export default {
     endDayCount () {
       return this.endDate().getDay()
     },
-    getScheduleTitle (date) {
+    getScheduleTitle (year, month, date) {
       // 登録したスケジュールの中から該当の日時のタイトルの配列を返すメソッド
-      const currentDate = String(this.currentYear) + '-' + String(('0' + this.currentMonth + 1).slice(-2)) + '-' + String('0' + Number(date)).slice(-2)
+      const currentDate = String(year) + '-' + String(('0' + month).slice(-2)) + '-' + String('0' + Number(date)).slice(-2)
       const regexp = new RegExp('^' + currentDate)
       const matchDates = this.schedules.filter(schedule => schedule.start_at.match(regexp))
-      const result = matchDates.map(date => date.title)
-      return result
+      let titles = matchDates.map(date => date.title)
+      // 登録直後の予定をカレンダーに表示させる
+      const justRegisterdMatchDates = this.justRegisteredDates.filter(schedule => schedule.start_at.match(regexp))
+      const justRegisteredTitles = justRegisterdMatchDates.map(date => date.title)
+      titles = titles.concat(justRegisteredTitles)
+      return titles
+    },
+    // 表示するカレンダーの行数を判定するメソッド
+    // startDayは日曜を0として「0-6」の曜日を指定
+    weekCount (startDay, month) {
+      const bigMoon = [1, 3, 5, 7, 8, 10, 12]
+      // 一旦2月は28日前提
+      // TODO dataのcurrentYearを元にうるう年判定
+      const lastDate = bigMoon.indexOf(month) ? 31 : month === 2 ? 28 : 30
+      const weekCount = Math.ceil((startDay + lastDate + 1) / 7)
+      return weekCount
     },
     renderCalendar () {
       const startDay = this.startDay
@@ -210,20 +230,34 @@ export default {
       const calendars = []
       let lastDateCount = startDay - 1
 
-      for (let i = 0; i < 5; i++) {
+      const weekCount = this.weekCount(startDay, this.currentMonth + 1)
+
+      for (let i = 0; i < weekCount; i++) {
         const weekRow = []
         for (let day = 0; day < 7; day++) {
           if (i > 0 || (i === 0 && day >= startDay)) {
+            const date = currentDate.getDate()
+            // 翌月の範囲かどうか判定
+            const month = (i > 0 && date < 7) ? this.currentMonth + 2 : this.currentMonth + 1
+            const year = this.currentYear
+
             weekRow.push({
-              date: currentDate.getDate(),
-              schedule_titles: this.getScheduleTitle(currentDate.getDate())
+              date,
+              schedule_titles: this.getScheduleTitle(year, month, currentDate.getDate()),
+              month,
+              year
             })
             currentDate.setDate(currentDate.getDate() + 1)
           } else {
+            const date = lastMonthEndDate - lastDateCount
+            const month = this.currentMonth === 0 ? 12 : this.currentMonth
+            const year = this.currentMonth === 0 ? this.currentYear - 1 : this.currentYear
             weekRow.push({
               // 曜日を使ってつじつま合わせ
-              date: lastMonthEndDate - lastDateCount,
-              schedule_titles: this.getScheduleTitle(currentDate.getDate())
+              date,
+              schedule_titles: this.getScheduleTitle(year, month, date),
+              month,
+              year
             })
             lastDateCount--
           }
@@ -233,8 +267,10 @@ export default {
       return calendars
     },
     registerSchedule () {
-      const startAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.start_at
-      const endAt = this.currentYear + '-0' + (this.currentMonth + 1) + '-' + this.dialogItems.day + ' ' + this.dialogItems.end_at
+      const year = this.dialogItems.year
+      const month = this.dialogItems.month
+      const startAt = year + '-' + String(('0' + month).slice(-2)) + '-' + String(('0' + this.dialogItems.day).slice(-2)) + ' ' + this.dialogItems.start_at
+      const endAt = year + '-' + String(('0' + month).slice(-2)) + '-' + String(('0' + this.dialogItems.day).slice(-2)) + ' ' + this.dialogItems.end_at
 
       this.$apollo.mutate({
         mutation: createSchedule,
@@ -246,6 +282,10 @@ export default {
           end_at: endAt
         }
       })
+
+      const registerdDate = { title: this.dialogItems.title, start_at: startAt }
+      this.justRegisteredDates.push(registerdDate)
+      this.startDate = new Date(year, month, 1)
     }
   },
   apollo: {
