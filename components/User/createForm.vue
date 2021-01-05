@@ -2,33 +2,27 @@
   <div>
     <v-form
     ref="form"
-    v-model="valid"
-    lazy-validation
     >
       <v-text-field
         v-model="name"
-        :rules="nameRules"
         label="ユーザ名"
         required
       ></v-text-field>
 
       <v-text-field
-        v-model="name"
-        :rules="nameRules"
+        v-model="email"
         label="メールアドレス"
         required
       ></v-text-field>
 
       <v-text-field
-        v-model="name"
-        :rules="nameRules"
+        v-model="password"
         label="パスワード"
         required
       ></v-text-field>
 
       <v-text-field
-        v-model="name"
-        :rules="nameRules"
+        v-model="confirmPassword"
         label="パスワード(確認)"
         required
       ></v-text-field>
@@ -40,22 +34,46 @@
         required
       ></v-checkbox>
 
-      <v-btn
-        color="primary"
-        class="mr-4"
-        @click="validate"
-      >
-        ユーザ登録
-      </v-btn>
+      <span @click="registerUser">
+        <v-btn
+          color="primary"
+          class="mr-4"
+        >
+          ユーザ登録
+        </v-btn>
+      </span>
     </v-form>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
+import createUser from '~/apollo/mutations/createUser.gql'
+
 export default {
+  data () {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      checkbox: false
+    }
+  },
   methods: {
     validate () {
       this.$refs.form.validate()
+    },
+    async registerUser () {
+      const response = await this.$apollo.mutate({
+        mutation: createUser,
+        variables: {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        }
+      })
+      localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.createUser.token }))
     }
   }
 }
