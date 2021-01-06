@@ -3,6 +3,7 @@
     <v-form
     ref="form"
     >
+      <p>{{ sendMessage }}</p>
       <v-text-field
         v-model="name"
         label="ユーザ名"
@@ -57,7 +58,8 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
-      checkbox: false
+      checkbox: false,
+      sendMessage: ''
     }
   },
   methods: {
@@ -65,15 +67,20 @@ export default {
       this.$refs.form.validate()
     },
     async registerUser () {
-      const response = await this.$apollo.mutate({
-        mutation: createUser,
-        variables: {
-          name: this.name,
-          email: this.email,
-          password: this.password
-        }
-      })
-      localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.createUser.token }))
+      try {
+        const response = await this.$apollo.mutate({
+          mutation: createUser,
+          variables: {
+            name: this.name,
+            email: this.email,
+            password: this.password
+          }
+        })
+        localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.createUser.token, id: response.data.createUser.id, name: response.data.createUser.name }))
+        this.sendMessage = '登録完了しました。'
+      } catch (error) {
+        this.sendMessage = 'ユーザ登録に失敗しました。'
+      }
     }
   }
 }
