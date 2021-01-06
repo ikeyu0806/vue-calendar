@@ -1,9 +1,16 @@
 <template>
   <div>
+    <span v-if="createFailure">
+      <v-alert
+        color="red"
+        dense
+        text
+        type="error"
+      >ユーザ登録に失敗しました。</v-alert>
+    </span>
     <v-form
     ref="form"
     >
-      <p>{{ sendMessage }}</p>
       <v-text-field
         v-model="name"
         label="ユーザ名"
@@ -60,6 +67,7 @@ export default {
       confirmPassword: '',
       checkbox: false,
       sendMessage: '',
+      createFailure: false,
       createSuccess: false
     }
   },
@@ -84,7 +92,7 @@ export default {
         this.createSuccess = true
         this.returnTop()
       } catch (error) {
-        this.sendMessage = 'ユーザ登録に失敗しました。'
+        this.createFailure = true
       }
     }
   }
