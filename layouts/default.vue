@@ -98,13 +98,13 @@ export default {
       items: [
         {
           icon: 'mdi-apps',
-          title: 'Welcome',
+          title: 'Calendar',
           to: '/'
         },
         {
           icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          title: 'ユーザ登録',
+          to: '/user/create'
         }
       ],
       miniVariant: false,
