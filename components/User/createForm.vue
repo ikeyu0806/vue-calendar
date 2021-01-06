@@ -59,12 +59,16 @@ export default {
       password: '',
       confirmPassword: '',
       checkbox: false,
-      sendMessage: ''
+      sendMessage: '',
+      createSuccess: false
     }
   },
   methods: {
     validate () {
       this.$refs.form.validate()
+    },
+    returnTop(){
+      this.$router.push({path: '/', query: {createSuccess: this.createSuccess}})
     },
     async registerUser () {
       try {
@@ -77,7 +81,8 @@ export default {
           }
         })
         localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.createUser.token, id: response.data.createUser.id, name: response.data.createUser.name }))
-        this.sendMessage = '登録完了しました。'
+        this.createSuccess = true
+        this.returnTop()
       } catch (error) {
         this.sendMessage = 'ユーザ登録に失敗しました。'
       }
