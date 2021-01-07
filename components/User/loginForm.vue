@@ -1,12 +1,12 @@
 <template>
   <div>
-    <span v-if="createFailure">
+    <span v-if="loginFailure">
       <v-alert
         color="red"
         dense
         text
         type="error"
-      >ユーザ登録に失敗しました。</v-alert>
+      >ログインに失敗しました。</v-alert>
     </span>
     <v-form
       ref="form"
@@ -22,34 +22,13 @@
       ></v-text-field>
 
       <v-text-field
-        v-model="email"
-        :rules="emailRules"
-        label="メールアドレス"
-        required
-      ></v-text-field>
-
-      <v-text-field
         v-model="password"
         :rules="passwordRules"
         label="パスワード"
         required
       ></v-text-field>
 
-      <v-text-field
-        v-model="confirmPassword"
-        :rules="confirmPasswordRules"
-        label="パスワード(確認)"
-        required
-      ></v-text-field>
-
-      <v-checkbox
-        v-model="checkbox"
-        :rules="[v => !!v || '規約に同意していません。']"
-        label="規約に同意します"
-        required
-      ></v-checkbox>
-
-      <span @click="registerUser">
+      <span @click="loginUser">
         <v-btn
           :disabled="!(this.valid)"
           color="primary"
@@ -65,7 +44,7 @@
 
 <script>
 /* eslint-disable */
-import createUser from '~/apollo/mutations/createUser.gql'
+import loginUser from '~/apollo/mutations/loginUser.gql'
 
 export default {
   data () {
@@ -75,25 +54,14 @@ export default {
         v => !!v || '名前は必須項目です。',
         v => (v && v.length <= 30) || '名前は30文字以下で入力してください。',
       ],
-      email: '',
-      emailRules: [
-        v => !!v || 'Emailは必須項目です。',
-        v => /.+@.+\..+/.test(v) || '不正な入力値です',
-      ],
       password: '',
       passwordRules: [
         v => !!v || 'パスワードは必須項目です。',
         v => (v && v.length >= 8) || 'パスワードは半角英数字8文字以上で入力してください。',
       ],
-      confirmPassword: '',
-      confirmPasswordRules: [
-        v => !!v || 'パスワード(確認)は必須項目です。',
-        v => v === this.password || 'パスワードと確認用パスワードは一致しません。',
-      ],
-      checkbox: false,
       sendMessage: '',
-      createFailure: false,
-      createSuccess: false,
+      loginFailure: false,
+      loginSuccess: false,
       valid: false
     }
   },
@@ -102,23 +70,22 @@ export default {
       this.$refs.form.validate()
     },
     returnTop(){
-      this.$router.push({path: '/', query: {createSuccess: this.createSuccess}})
+      this.$router.push({path: '/', query: {loginSuccess: this.loginSuccess}})
     },
-    async registerUser () {
+    async loginUser () {
       try {
         const response = await this.$apollo.mutate({
-          mutation: createUser,
+          mutation: loginUser,
           variables: {
             name: this.name,
-            email: this.email,
             password: this.password
           }
         })
-        localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.createUser.token, id: response.data.createUser.id, name: response.data.createUser.name }))
-        this.createSuccess = true
+        localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.loginUser.token, id: response.data.loginUser.id, name: response.data.loginUser.name }))
+        this.loginSuccess = true
         this.returnTop()
       } catch (error) {
-        this.createFailure = true
+        this.loginFailure = true
       }
     }
   }

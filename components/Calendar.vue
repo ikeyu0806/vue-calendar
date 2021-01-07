@@ -7,6 +7,13 @@
           type="success"
         >ユーザ登録に成功しました。</v-alert>
       </span>
+      <span v-if="loginSuccess">
+        <v-alert
+          dense
+          text
+          type="success"
+        >ログインに成功しました。</v-alert>
+      </span>
     <v-row justify="center" align="center">
       <v-col><h3 id="date-title">{{ dateTitle }}</h3></v-col>
       <v-col></v-col>
@@ -174,6 +181,9 @@ export default {
     },
     createSuccess () {
       return this.$route.query.createSuccess === 'true'
+    },
+    loginSuccess () {
+      return this.$route.query.loginSuccess === 'true'
     }
   },
   methods: {

@@ -102,9 +102,19 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'mdi-account-plus',
           title: 'ユーザ登録',
           to: '/user/create'
+        },
+        {
+          icon: 'mdi-login',
+          title: 'ログイン',
+          to: '/user/login'
+        },
+        {
+          icon: 'mdi-logout',
+          title: 'ログアウト',
+          to: '/user/logout'
         }
       ],
       miniVariant: false,
