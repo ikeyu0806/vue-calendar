@@ -3,7 +3,7 @@
     <v-btn
           color="error"
           class="mr-4"
-          @click="validate"
+          @click="validate;"
         >
           ログアウト
         </v-btn>
@@ -15,6 +15,10 @@ export default {
   methods: {
     logout () {
       localStorage.removeItem('calendarCurrentUser')
+      this.returnTop()
+    },
+    returnTop () {
+      this.$router.push({ path: '/', query: { logoutSuccess: true } })
     }
   }
 }

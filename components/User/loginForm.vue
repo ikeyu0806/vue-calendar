@@ -35,7 +35,7 @@
           class="mr-4"
           @click="validate"
         >
-          ユーザ登録
+          ログイン
         </v-btn>
       </span>
     </v-form>

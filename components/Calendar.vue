@@ -14,6 +14,13 @@
           type="success"
         >ログインに成功しました。</v-alert>
       </span>
+      <span v-if="logoutSuccess">
+        <v-alert
+          dense
+          text
+          type="success"
+        >ログアウトしました。</v-alert>
+      </span>
     <v-row justify="center" align="center">
       <v-col><h3 id="date-title">{{ dateTitle }}</h3></v-col>
       <v-col></v-col>
@@ -184,6 +191,9 @@ export default {
     },
     loginSuccess () {
       return this.$route.query.loginSuccess === 'true'
+    },
+    logoutSuccess () {
+      return this.$route.query.logoutSuccess === 'true'
     }
   },
   methods: {
