@@ -9,28 +9,35 @@
       >ユーザ登録に失敗しました。</v-alert>
     </span>
     <v-form
-    ref="form"
+      ref="form"
+      v-model="valid"
+      lazy-validation
     >
       <v-text-field
         v-model="name"
+        :counter="30"
+        :rules="nameRules"
         label="ユーザ名"
         required
       ></v-text-field>
 
       <v-text-field
         v-model="email"
+        :rules="emailRules"
         label="メールアドレス"
         required
       ></v-text-field>
 
       <v-text-field
         v-model="password"
+        :rules="passwordRules"
         label="パスワード"
         required
       ></v-text-field>
 
       <v-text-field
         v-model="confirmPassword"
+        :rules="confirmPasswordRules"
         label="パスワード(確認)"
         required
       ></v-text-field>
@@ -44,8 +51,10 @@
 
       <span @click="registerUser">
         <v-btn
+          :disabled="!valid"
           color="primary"
           class="mr-4"
+          @click="validate"
         >
           ユーザ登録
         </v-btn>
@@ -62,13 +71,31 @@ export default {
   data () {
     return {
       name: '',
+      nameRules: [
+        v => !!v || '名前は必須項目です。',
+        v => (v && v.length <= 30) || '名前は30文字以下で入力してください。',
+      ],
       email: '',
+      emailRules: [
+        v => !!v || 'Emailは必須項目です。',
+        v => /.+@.+\..+/.test(v) || '不正な入力値です',
+      ],
       password: '',
+      passwordRules: [
+        v => !!v || 'パスワードは必須項目です。',
+        v => /^[a-z\d]{8,100}$/i || 'パスワードは半角英数字8文字以上で入力してください。',
+      ],
       confirmPassword: '',
+      confirmPasswordRules: [
+        v => !!v || 'パスワード(確認)は必須項目です。',
+        v => v === this.password || 'パスワードと確認用パスワードは一致しません。',
+      ],
       checkbox: false,
       sendMessage: '',
       createFailure: false,
-      createSuccess: false
+      createSuccess: false,
+      valid: false,
+      checkbox: false
     }
   },
   methods: {
@@ -94,6 +121,9 @@ export default {
       } catch (error) {
         this.createFailure = true
       }
+    },
+    validate () {
+      this.$refs.form.validate()
     }
   }
 }
