@@ -83,7 +83,7 @@ export default {
       password: '',
       passwordRules: [
         v => !!v || 'パスワードは必須項目です。',
-        v => /^[a-z\d]{8,100}$/i || 'パスワードは半角英数字8文字以上で入力してください。',
+        v => (v && v.length >= 8) || 'パスワードは半角英数字8文字以上で入力してください。',
       ],
       confirmPassword: '',
       confirmPasswordRules: [
