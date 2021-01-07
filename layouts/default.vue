@@ -50,6 +50,7 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
+      <LogoutButton></LogoutButton>
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
@@ -89,6 +90,9 @@
 </template>
 
 <script>
+/* eslint-disable */
+import LogoutButton from '~/components/User/LogoutButton'
+
 export default {
   data () {
     return {
@@ -120,8 +124,11 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'vue calendar'
+      title: 'vue calendar',
     }
+  },
+  components: {
+    LogoutButton
   }
 }
 </script>
