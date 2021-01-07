@@ -50,7 +50,9 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <LogoutButton></LogoutButton>
+      <span v-if="isLoggin">
+        <LogoutButton></LogoutButton>
+      </span>
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
@@ -125,10 +127,17 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'vue calendar',
+      isLoggin: false
     }
   },
   components: {
     LogoutButton
+  },
+  mounted () {
+    if (localStorage.calendarCurrentUser) {
+      console.log
+      this.isLoggin = localStorage.calendarCurrentUser.token !== null
+    }
   }
 }
 </script>
