@@ -35,7 +35,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import LogoutButton from '~/components/User/LogoutButton'
 import LoginButton from '~/components/User/LoginButton'
 import CreateButton from '~/components/User/CreateButton'
@@ -60,7 +59,6 @@ export default {
   },
   mounted () {
     if (localStorage.calendarCurrentUser) {
-      console.log
       this.isLoggin = localStorage.calendarCurrentUser.token !== null
     }
   }
