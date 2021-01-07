@@ -10,6 +10,10 @@
       <span v-if="isLoggin">
         <LogoutButton></LogoutButton>
       </span>
+      <span v-else-if="!isLoggin">
+        <LoginButton></LoginButton>
+        <CreateButton></CreateButton>
+      </span>
       <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
@@ -33,6 +37,8 @@
 <script>
 /* eslint-disable */
 import LogoutButton from '~/components/User/LogoutButton'
+import LoginButton from '~/components/User/LoginButton'
+import CreateButton from '~/components/User/CreateButton'
 
 export default {
   data () {
@@ -48,6 +54,8 @@ export default {
     }
   },
   components: {
+    LoginButton,
+    CreateButton,
     LogoutButton
   },
   mounted () {
