@@ -94,8 +94,7 @@ export default {
       sendMessage: '',
       createFailure: false,
       createSuccess: false,
-      valid: false,
-      checkbox: false
+      valid: true
     }
   },
   methods: {
@@ -121,9 +120,6 @@ export default {
       } catch (error) {
         this.createFailure = true
       }
-    },
-    validate () {
-      this.$refs.form.validate()
     }
   }
 }
