@@ -7,10 +7,10 @@
     >
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <span v-if="isLoggin">
+      <span v-if="login">
         <LogoutButton></LogoutButton>
       </span>
-      <span v-else-if="!isLoggin">
+      <span v-else-if="!login">
         <LoginButton></LoginButton>
         <CreateButton></CreateButton>
       </span>
@@ -57,9 +57,15 @@ export default {
     CreateButton,
     LogoutButton
   },
+  computed: {
+    login () {
+      return this.$store.getters.isLogin
+    }
+  },
   mounted () {
     if (localStorage.calendarCurrentUser) {
-      this.isLoggin = localStorage.calendarCurrentUser.token !== null
+      const isLoggin = localStorage.calendarCurrentUser.token !== null
+      this.$store.commit('setLogin', { login: isLoggin })
     }
   }
 }

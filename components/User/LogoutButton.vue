@@ -15,6 +15,7 @@ export default {
   methods: {
     logout () {
       localStorage.removeItem('calendarCurrentUser')
+      this.$store.commit('setLogin', { login: false })
       this.returnTop()
     },
     returnTop () {
