@@ -115,6 +115,7 @@ export default {
         })
         localStorage.setItem('calendarCurrentUser', JSON.stringify({ token: response.data.createUser.token, id: response.data.createUser.id, name: response.data.createUser.name }))
         this.createSuccess = true
+        this.$store.commit('setLogin', { login: true })
         this.returnTop()
       } catch (error) {
         this.createFailure = true
