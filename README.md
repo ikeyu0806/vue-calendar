@@ -1,7 +1,7 @@
 # vue-calendar
 Vue.js(Nuxt.js)で開発した自作のカレンダーサービスです。
 
-APIインターフェイスにはGraphQLを使用しています。
+APIインターフェイスにはGraphQL、状態管理ライブラリにはVuexを使用しています。
 
 Golang製のバックエンドを[別リポジトリ](https://github.com/ikeyu0806/calendar-backend)で管理しています。
 
