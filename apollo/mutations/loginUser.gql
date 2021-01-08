@@ -1,0 +1,7 @@
+mutation loginUser (
+  $name: String, $password: String
+) {
+  loginUser(input: { name: $name, password: $password }) {
+    token
+  }
+}
