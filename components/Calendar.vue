@@ -63,17 +63,21 @@
       v-model="dialog"
       max-width="600"
       >
+    <v-form
+      ref="form"
+      v-model="valid"
+    >
       <v-card>
         <v-card-title>{{ dialogItems.header_title }}</v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field label="タイトル" v-model="dialogItems.title"></v-text-field>
+                <v-text-field label="タイトル" :rules="dialogItems.titleRules" v-model="dialogItems.title"></v-text-field>
                 <v-text-field label="内容" v-model="dialogItems.content"></v-text-field>
                 <v-text-field label="メモ" v-model="dialogItems.memo"></v-text-field>
                 <strong>開始時間</strong>
-                <v-text-field type="time" name="time" v-model="dialogItems.start_at"></v-text-field>
+                <v-text-field type="time" :rules="dialogItems.startAtRules" name="time" v-model="dialogItems.start_at"></v-text-field>
                 <strong>終了時間</strong>
                 <v-text-field type="time" name="time" v-model="dialogItems.end_at"></v-text-field>
               </v-col>
@@ -91,9 +95,10 @@
           </v-btn>
           <span @click="registerSchedule" id="schedule-register-btn">
             <v-btn
+              :disabled="!(this.valid)"
               depressed
               color="primary"
-              @click="dialog = false;"
+              @click="dialog = false;scheduleValidate;"
             >
               Save
             </v-btn>
@@ -101,6 +106,7 @@
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
+      </v-form>
     </v-dialog>
   </div>
 </template>
@@ -165,15 +171,22 @@ export default {
       dialogItems: {
         header_title: '',
         title: '',
+        titleRules: [
+          v => !!v || 'タイトルは必須項目です。'
+        ],
         content: '',
         start_at: '',
+        startAtRules: [
+          v => !!v || '開始時間は必須項目です。'
+        ],
         end_at: '',
         day: '',
         year: '',
         month: ''
       },
       // 予定登録直後に表示させるためのdata
-      justRegisteredDates: []
+      justRegisteredDates: [],
+      valid: false
     }
   },
   computed: {
@@ -197,6 +210,9 @@ export default {
     }
   },
   methods: {
+    scheduleValidate () {
+      this.$refs.form.validate()
+    },
     prevMonth () {
       this.currentMonth === 0 ? this.currentMonth = 11 : this.currentMonth--
       this.currentMonth === 11 && this.currentYear--
