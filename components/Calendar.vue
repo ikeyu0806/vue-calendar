@@ -316,6 +316,7 @@ export default {
       const month = this.dialogItems.month
       const startAt = year + '-' + String(('0' + month).slice(-2)) + '-' + String(('0' + this.dialogItems.day).slice(-2)) + ' ' + this.dialogItems.start_at
       const endAt = year + '-' + String(('0' + month).slice(-2)) + '-' + String(('0' + this.dialogItems.day).slice(-2)) + ' ' + this.dialogItems.end_at
+      const currentUserId = this.$store.getters.userId
 
       this.$apollo.mutate({
         mutation: createSchedule,
@@ -324,7 +325,8 @@ export default {
           content: this.dialogItems.content,
           memo: this.dialogItems.memo,
           start_at: startAt,
-          end_at: endAt
+          end_at: endAt,
+          userId: currentUserId
         }
       })
 

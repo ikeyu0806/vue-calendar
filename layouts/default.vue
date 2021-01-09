@@ -49,7 +49,8 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'vue calendar',
-      isLoggin: false
+      isLoggin: false,
+      userId: 0
     }
   },
   components: {
@@ -64,8 +65,10 @@ export default {
   },
   mounted () {
     if (localStorage.calendarCurrentUser) {
-      const isLoggin = localStorage.calendarCurrentUser.token !== null
+      const isLoggin = JSON.parse(localStorage.calendarCurrentUser).token !== null
+      const currentUserId = JSON.parse(localStorage.calendarCurrentUser).id
       this.$store.commit('setLogin', { login: isLoggin })
+      this.$store.commit('setUserId', { userId: currentUserId })
     }
   }
 }

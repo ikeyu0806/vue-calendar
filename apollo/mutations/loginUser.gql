@@ -3,5 +3,7 @@ mutation loginUser (
 ) {
   loginUser(input: { name: $name, password: $password }) {
     token
+    id
+    name
   }
 }
