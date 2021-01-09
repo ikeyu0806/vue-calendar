@@ -340,7 +340,7 @@ export default {
       prefetch: true,
       query: getSchedulesGql,
       variables () {
-        return { userId: 84 }
+        return { userId: this.$store.getters.userId }
       }
     }
   }
