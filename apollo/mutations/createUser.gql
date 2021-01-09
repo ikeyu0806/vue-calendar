@@ -3,5 +3,7 @@ mutation registerUser (
 ) {
   createUser(input: { name: $name, email: $email, password: $password }) {
     token
+    id
+    name
   }
 }

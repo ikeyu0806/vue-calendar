@@ -1,5 +1,5 @@
-query GetSchedules {
-    schedules {
+query GetSchedules($userId: Int) {
+    schedules(userId: $userId) {
         id
         title
         content
