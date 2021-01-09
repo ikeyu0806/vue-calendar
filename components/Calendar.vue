@@ -338,7 +338,10 @@ export default {
   apollo: {
     schedules: {
       prefetch: true,
-      query: getSchedulesGql
+      query: getSchedulesGql,
+      variables () {
+        return { userId: 84 }
+      }
     }
   }
 }
