@@ -92,17 +92,26 @@
             color="error"
             @click="dialog = false"
           >
-            Close
+            閉じる
           </v-btn>
           <span v-if="this.dialogItems.edit">
-            <span @click="registerSchedule" id="schedule-update-btn">
+            <span @click="deleteSchedule(dialogItems.id)">
+              <v-btn
+                depressed
+                color="warning"
+                @click="dialog = false;"
+              >
+                予定を削除
+              </v-btn>
+            </span>
+            <span>
               <v-btn
                 :disabled="!(this.valid)"
                 depressed
                 color="info"
                 @click="dialog = false;scheduleValidate;"
               >
-                Update
+                予定を更新
               </v-btn>
             </span>
           </span>
@@ -114,7 +123,7 @@
                 color="primary"
                 @click="dialog = false;scheduleValidate;"
               >
-                Save
+                予定を登録
               </v-btn>
             </span>
           </span>
@@ -167,6 +176,7 @@ td {
 <script>
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 import createSchedule from '~/apollo/mutations/createSchedule.gql'
+import deleteSchedule from '~/apollo/mutations/deleteSchedule.gql'
 
 export default {
   data () {
@@ -288,7 +298,7 @@ export default {
       return weekCount
     },
     editSchedule (data) {
-      console.log('hi')
+      this.dialogItems.id = data.id
       this.dialogItems.title = data.title
       this.dialogItems.content = data.content
       // DBから取り出した文字列に'Z'がつくとUTCになってしまうので削除。他にやり方あるきもするけどとりあえず。
@@ -377,6 +387,16 @@ export default {
       }
       this.justRegisteredDates.push(registerdDate)
       this.startDate = new Date(year, month, 1)
+    },
+    deleteSchedule (ID) {
+      this.$apollo.mutate({
+        mutation: deleteSchedule,
+        variables: {
+          scheduleId: ID
+        }
+      })
+      this.schedules = this.schedules.filter(schedule => schedule.id !== ID)
+      this.justRegisteredDates = this.justRegisteredDates.filter(date => date.id !== ID)
     }
   },
   apollo: {
