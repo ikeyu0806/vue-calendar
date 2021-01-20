@@ -51,8 +51,8 @@
               dialogItems.year = day.year;
               dialogItems.month = day.month;">
               <div class="date">{{ day.date }}</div>
-              <span v-for="(schedule_title, index) in day.schedule_titles" :key="index">
-                <div class="schedule-title">{{ schedule_title }}</div>
+              <span v-for="(data, index) in day.schedule_data" :key="index">
+                <div class="schedule-title" @click="editSchedule">{{ data.title }}</div>
               </span>
             </td>
           </tr>
@@ -246,17 +246,15 @@ export default {
     endDayCount () {
       return this.endDate().getDay()
     },
-    getScheduleTitle (year, month, date) {
-      // 登録したスケジュールの中から該当の日時のタイトルの配列を返すメソッド
+    getScheduleData (year, month, date) {
+      // 登録したスケジュールの中から該当の日時のデータを返すメソッド
       const currentDate = String(year) + '-' + String(('0' + month).slice(-2)) + '-' + String('0' + Number(date)).slice(-2)
       const regexp = new RegExp('^' + currentDate)
       const matchDates = this.schedules.filter(schedule => schedule.start_at.match(regexp))
-      let titles = matchDates.map(date => date.title)
-      // 登録直後の予定をカレンダーに表示させる
+      let data = matchDates.map(date => date.title)
       const justRegisterdMatchDates = this.justRegisteredDates.filter(schedule => schedule.start_at.match(regexp))
-      const justRegisteredTitles = justRegisterdMatchDates.map(date => date.title)
-      titles = titles.concat(justRegisteredTitles)
-      return titles
+      data = Object.assign(matchDates, justRegisterdMatchDates)
+      return data
     },
     // 表示するカレンダーの行数を判定するメソッド
     // startDayは日曜を0として「0-6」の曜日を指定
@@ -267,6 +265,9 @@ export default {
       const lastDate = bigMoon.indexOf(month) ? 31 : month === 2 ? 28 : 30
       const weekCount = Math.ceil((startDay + lastDate + 1) / 7)
       return weekCount
+    },
+    editSchedule () {
+      console.log(this.schedules)
     },
     renderCalendar () {
       const startDay = this.startDay
@@ -288,7 +289,7 @@ export default {
 
             weekRow.push({
               date,
-              schedule_titles: this.getScheduleTitle(year, month, currentDate.getDate()),
+              schedule_data: this.getScheduleData(year, month, currentDate.getDate()),
               month,
               year
             })
@@ -300,7 +301,7 @@ export default {
             weekRow.push({
               // 曜日を使ってつじつま合わせ
               date,
-              schedule_titles: this.getScheduleTitle(year, month, date),
+              schedule_data: this.getScheduleData(year, month, date),
               month,
               year
             })
