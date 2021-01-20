@@ -49,7 +49,8 @@
               dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
               dialogItems.day = day.date;
               dialogItems.year = day.year;
-              dialogItems.month = day.month;">
+              dialogItems.month = day.month;
+              !Object.keys(day.schedule_data).length && clearDialog()">
               <div class="date">{{ day.date }}</div>
               <span v-for="(data, index) in day.schedule_data" :key="index">
                 <div class="schedule-title" @click="editSchedule(data)">{{ data.title }}</div>
@@ -276,6 +277,13 @@ export default {
       this.dialogItems.start_at = ('0' + startAt.getHours()).slice(-2) + ':' + ('0' + startAt.getMinutes()).slice(-2)
       const endAt = new Date(data.end_at.replace(/Z/g, ''))
       this.dialogItems.end_at = ('0' + endAt.getHours()).slice(-2) + ':' + ('0' + endAt.getMinutes()).slice(-2)
+    },
+    clearDialog () {
+      this.dialogItems.title = 'タイトルを入力してください'
+      this.dialogItems.content = ''
+      this.dialogItems.memo = ''
+      this.dialogItems.start_at = '00:00'
+      this.dialogItems.end_at = ''
     },
     renderCalendar () {
       const startDay = this.startDay
