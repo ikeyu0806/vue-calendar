@@ -249,7 +249,6 @@ export default {
       this.currentMonth === 11 && this.currentYear--
       this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
       const dt = new Date(this.currentYear, this.currentMonth, 1)
-      this.startDate = dt
       this.startDay = dt.getDay()
       this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
     },
@@ -258,7 +257,6 @@ export default {
       this.currentMonth === 0 && this.currentYear++
       this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
       const dt = new Date(this.currentYear, this.currentMonth, 1)
-      this.startDate = dt
       this.startDay = dt.getDay()
       this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
     },
@@ -317,6 +315,8 @@ export default {
       this.dialogItems.edit = false
     },
     renderCalendar () {
+      const dt = new Date(this.currentYear, this.currentMonth, 1)
+      this.startDate = dt
       const startDay = this.startDay
       const currentDate = this.startDate
       const lastMonthEndDate = this.lastMonthEndDate
