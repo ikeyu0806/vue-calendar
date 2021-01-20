@@ -49,10 +49,11 @@
               dialogItems.header_title = (currentMonth + 1) + '月' + day.date + '日の予定登録';
               dialogItems.day = day.date;
               dialogItems.year = day.year;
-              dialogItems.month = day.month;">
+              dialogItems.month = day.month;
+              !Object.keys(day.schedule_data).length && clearDialog()">
               <div class="date">{{ day.date }}</div>
-              <span v-for="(schedule_title, index) in day.schedule_titles" :key="index">
-                <div class="schedule-title">{{ schedule_title }}</div>
+              <span v-for="(data, index) in day.schedule_data" :key="index">
+                <div class="schedule-title" @click="editSchedule(data)">{{ data.title }}</div>
               </span>
             </td>
           </tr>
@@ -91,17 +92,40 @@
             color="error"
             @click="dialog = false"
           >
-            Close
+            閉じる
           </v-btn>
-          <span @click="registerSchedule" id="schedule-register-btn">
-            <v-btn
-              :disabled="!(this.valid)"
-              depressed
-              color="primary"
-              @click="dialog = false;scheduleValidate;"
-            >
-              Save
-            </v-btn>
+          <span v-if="this.dialogItems.edit">
+            <span @click="deleteSchedule(dialogItems.id)" class="margin-left-10">
+              <v-btn
+                depressed
+                color="warning"
+                @click="dialog = false;"
+              >
+                予定を削除
+              </v-btn>
+            </span>
+            <span class="margin-left-10">
+              <v-btn
+                :disabled="!(this.valid)"
+                depressed
+                color="info"
+                @click="dialog = false;scheduleValidate;"
+              >
+                予定を更新
+              </v-btn>
+            </span>
+          </span>
+          <span v-if="!this.dialogItems.edit">
+            <span @click="registerSchedule" class="margin-left-10">
+              <v-btn
+                :disabled="!(this.valid)"
+                depressed
+                color="primary"
+                @click="dialog = false;scheduleValidate;"
+              >
+                予定を登録
+              </v-btn>
+            </span>
           </span>
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -131,7 +155,7 @@
   padding: 5px 10px 5px 10px;
   margin: 5px;
 }
-#schedule-register-btn {
+.margin-left-10 {
   margin-left: 10px;
 }
 th {
@@ -149,6 +173,7 @@ td {
 <script>
 import getSchedulesGql from '~/apollo/queries/getSchedules.gql'
 import createSchedule from '~/apollo/mutations/createSchedule.gql'
+import deleteSchedule from '~/apollo/mutations/deleteSchedule.gql'
 
 export default {
   data () {
@@ -169,11 +194,13 @@ export default {
       lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate(),
       dialog: false,
       dialogItems: {
+        id: 0,
         header_title: '',
         title: '',
         titleRules: [
           v => !!v || 'タイトルは必須項目です。'
         ],
+        memo: '',
         content: '',
         start_at: '',
         startAtRules: [
@@ -182,7 +209,8 @@ export default {
         end_at: '',
         day: '',
         year: '',
-        month: ''
+        month: '',
+        edit: false
       },
       // 予定登録直後に表示させるためのdata
       justRegisteredDates: [],
@@ -218,7 +246,6 @@ export default {
       this.currentMonth === 11 && this.currentYear--
       this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
       const dt = new Date(this.currentYear, this.currentMonth, 1)
-      this.startDate = dt
       this.startDay = dt.getDay()
       this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
     },
@@ -227,7 +254,6 @@ export default {
       this.currentMonth === 0 && this.currentYear++
       this.lastMonthEndDate = new Date(this.currentYear, this.currentMonth, 0).getDate()
       const dt = new Date(this.currentYear, this.currentMonth, 1)
-      this.startDate = dt
       this.startDay = dt.getDay()
       this.lastMonthEndDate = new Date(dt.getFullYear(), dt.getMonth(), 0).getDate()
     },
@@ -246,17 +272,15 @@ export default {
     endDayCount () {
       return this.endDate().getDay()
     },
-    getScheduleTitle (year, month, date) {
-      // 登録したスケジュールの中から該当の日時のタイトルの配列を返すメソッド
+    getScheduleData (year, month, date) {
+      // 登録したスケジュールの中から該当の日時のデータを返すメソッド
       const currentDate = String(year) + '-' + String(('0' + month).slice(-2)) + '-' + String('0' + Number(date)).slice(-2)
       const regexp = new RegExp('^' + currentDate)
       const matchDates = this.schedules.filter(schedule => schedule.start_at.match(regexp))
-      let titles = matchDates.map(date => date.title)
-      // 登録直後の予定をカレンダーに表示させる
+      let data = matchDates.map(date => date.title)
       const justRegisterdMatchDates = this.justRegisteredDates.filter(schedule => schedule.start_at.match(regexp))
-      const justRegisteredTitles = justRegisterdMatchDates.map(date => date.title)
-      titles = titles.concat(justRegisteredTitles)
-      return titles
+      data = Object.assign(matchDates, justRegisterdMatchDates)
+      return data
     },
     // 表示するカレンダーの行数を判定するメソッド
     // startDayは日曜を0として「0-6」の曜日を指定
@@ -268,7 +292,28 @@ export default {
       const weekCount = Math.ceil((startDay + lastDate + 1) / 7)
       return weekCount
     },
+    editSchedule (data) {
+      this.dialogItems.id = data.id
+      this.dialogItems.title = data.title
+      this.dialogItems.content = data.content
+      // DBから取り出した文字列に'Z'がつくとUTCになってしまうので削除。他にやり方あるきもするけどとりあえず。
+      const startAt = data.start_at ? new Date(data.start_at.replace(/Z/g, '')) : new Date()
+      this.dialogItems.start_at = ('0' + startAt.getHours()).slice(-2) + ':' + ('0' + startAt.getMinutes()).slice(-2)
+      const endAt = data.end_at ? new Date(data.end_at.replace(/Z/g, '')) : new Date()
+      this.dialogItems.end_at = ('0' + endAt.getHours()).slice(-2) + ':' + ('0' + endAt.getMinutes()).slice(-2)
+      this.dialogItems.edit = true
+    },
+    clearDialog () {
+      this.dialogItems.title = 'タイトルを入力してください'
+      this.dialogItems.content = ''
+      this.dialogItems.memo = ''
+      this.dialogItems.start_at = '00:00'
+      this.dialogItems.end_at = ''
+      this.dialogItems.edit = false
+    },
     renderCalendar () {
+      const dt = new Date(this.currentYear, this.currentMonth, 1)
+      this.startDate = dt
       const startDay = this.startDay
       const currentDate = this.startDate
       const lastMonthEndDate = this.lastMonthEndDate
@@ -288,7 +333,7 @@ export default {
 
             weekRow.push({
               date,
-              schedule_titles: this.getScheduleTitle(year, month, currentDate.getDate()),
+              schedule_data: this.getScheduleData(year, month, currentDate.getDate()),
               month,
               year
             })
@@ -300,7 +345,7 @@ export default {
             weekRow.push({
               // 曜日を使ってつじつま合わせ
               date,
-              schedule_titles: this.getScheduleTitle(year, month, date),
+              schedule_data: this.getScheduleData(year, month, date),
               month,
               year
             })
@@ -330,9 +375,25 @@ export default {
         }
       })
 
-      const registerdDate = { title: this.dialogItems.title, start_at: startAt }
+      const registerdDate = {
+        title: this.dialogItems.title,
+        content: this.dialogItems.content,
+        memo: this.dialogItems.memo,
+        start_at: startAt,
+        end_at: endAt
+      }
       this.justRegisteredDates.push(registerdDate)
       this.startDate = new Date(year, month, 1)
+    },
+    deleteSchedule (ID) {
+      this.$apollo.mutate({
+        mutation: deleteSchedule,
+        variables: {
+          scheduleId: ID
+        }
+      })
+      this.schedules = this.schedules.filter(schedule => schedule.id !== ID)
+      this.justRegisteredDates = this.justRegisteredDates.filter(date => date.id !== ID)
     }
   },
   apollo: {

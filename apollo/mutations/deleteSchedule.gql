@@ -1,0 +1,8 @@
+mutation deleteSchedule (
+  $scheduleId: Int
+) {
+  deleteSchedule(scheduleId: $scheduleId) {
+    msg
+    success
+  }
+}
