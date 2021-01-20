@@ -52,7 +52,7 @@
               dialogItems.month = day.month;">
               <div class="date">{{ day.date }}</div>
               <span v-for="(data, index) in day.schedule_data" :key="index">
-                <div class="schedule-title" @click="editSchedule">{{ data.title }}</div>
+                <div class="schedule-title" @click="editSchedule(data)">{{ data.title }}</div>
               </span>
             </td>
           </tr>
@@ -169,11 +169,13 @@ export default {
       lastMonthEndDate: new Date(this.date().getFullYear(), this.date().getMonth(), 0).getDate(),
       dialog: false,
       dialogItems: {
+        id: 0,
         header_title: '',
         title: '',
         titleRules: [
           v => !!v || 'タイトルは必須項目です。'
         ],
+        memo: '',
         content: '',
         start_at: '',
         startAtRules: [
@@ -266,8 +268,13 @@ export default {
       const weekCount = Math.ceil((startDay + lastDate + 1) / 7)
       return weekCount
     },
-    editSchedule () {
-      console.log(this.schedules)
+    editSchedule (data) {
+      this.dialogItems.title = data.title
+      this.dialogItems.content = data.content
+      const startAt = new Date(data.start_at)
+      this.dialogItems.start_at = ('0' + startAt.getHours()).slice(-2) + ':' + ('0' + startAt.getMinutes()).slice(-2)
+      const endAt = new Date(data.end_at)
+      this.dialogItems.end_at = ('0' + endAt.getHours()).slice(-2) + ':' + ('0' + endAt.getMinutes()).slice(-2)
     },
     renderCalendar () {
       const startDay = this.startDay
