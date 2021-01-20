@@ -94,15 +94,29 @@
           >
             Close
           </v-btn>
-          <span @click="registerSchedule" id="schedule-register-btn">
-            <v-btn
-              :disabled="!(this.valid)"
-              depressed
-              color="primary"
-              @click="dialog = false;scheduleValidate;"
-            >
-              Save
-            </v-btn>
+          <span v-if="this.dialogItems.edit">
+            <span @click="registerSchedule" id="schedule-update-btn">
+              <v-btn
+                :disabled="!(this.valid)"
+                depressed
+                color="info"
+                @click="dialog = false;scheduleValidate;"
+              >
+                Update
+              </v-btn>
+            </span>
+          </span>
+          <span v-if="!this.dialogItems.edit">
+            <span @click="registerSchedule" id="schedule-register-btn">
+              <v-btn
+                :disabled="!(this.valid)"
+                depressed
+                color="primary"
+                @click="dialog = false;scheduleValidate;"
+              >
+                Save
+              </v-btn>
+            </span>
           </span>
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -133,6 +147,9 @@
   margin: 5px;
 }
 #schedule-register-btn {
+  margin-left: 10px;
+}
+#schedule-update-btn {
   margin-left: 10px;
 }
 th {
@@ -185,7 +202,8 @@ export default {
         end_at: '',
         day: '',
         year: '',
-        month: ''
+        month: '',
+        edit: false
       },
       // 予定登録直後に表示させるためのdata
       justRegisteredDates: [],
@@ -270,13 +288,15 @@ export default {
       return weekCount
     },
     editSchedule (data) {
+      console.log('hi')
       this.dialogItems.title = data.title
       this.dialogItems.content = data.content
       // DBから取り出した文字列に'Z'がつくとUTCになってしまうので削除。他にやり方あるきもするけどとりあえず。
-      const startAt = new Date(data.start_at.replace(/Z/g, ''))
+      const startAt = data.start_at ? new Date(data.start_at.replace(/Z/g, '')) : new Date()
       this.dialogItems.start_at = ('0' + startAt.getHours()).slice(-2) + ':' + ('0' + startAt.getMinutes()).slice(-2)
-      const endAt = new Date(data.end_at.replace(/Z/g, ''))
+      const endAt = data.end_at ? new Date(data.end_at.replace(/Z/g, '')) : new Date()
       this.dialogItems.end_at = ('0' + endAt.getHours()).slice(-2) + ':' + ('0' + endAt.getMinutes()).slice(-2)
+      this.dialogItems.edit = true
     },
     clearDialog () {
       this.dialogItems.title = 'タイトルを入力してください'
@@ -284,6 +304,7 @@ export default {
       this.dialogItems.memo = ''
       this.dialogItems.start_at = '00:00'
       this.dialogItems.end_at = ''
+      this.dialogItems.edit = false
     },
     renderCalendar () {
       const startDay = this.startDay
