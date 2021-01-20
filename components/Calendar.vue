@@ -95,7 +95,7 @@
             閉じる
           </v-btn>
           <span v-if="this.dialogItems.edit">
-            <span @click="deleteSchedule(dialogItems.id)">
+            <span @click="deleteSchedule(dialogItems.id)" class="margin-left-10">
               <v-btn
                 depressed
                 color="warning"
@@ -104,7 +104,7 @@
                 予定を削除
               </v-btn>
             </span>
-            <span>
+            <span class="margin-left-10">
               <v-btn
                 :disabled="!(this.valid)"
                 depressed
@@ -116,7 +116,7 @@
             </span>
           </span>
           <span v-if="!this.dialogItems.edit">
-            <span @click="registerSchedule" id="schedule-register-btn">
+            <span @click="registerSchedule" class="margin-left-10">
               <v-btn
                 :disabled="!(this.valid)"
                 depressed
@@ -155,10 +155,7 @@
   padding: 5px 10px 5px 10px;
   margin: 5px;
 }
-#schedule-register-btn {
-  margin-left: 10px;
-}
-#schedule-update-btn {
+.margin-left-10 {
   margin-left: 10px;
 }
 th {
