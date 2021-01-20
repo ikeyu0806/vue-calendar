@@ -271,9 +271,10 @@ export default {
     editSchedule (data) {
       this.dialogItems.title = data.title
       this.dialogItems.content = data.content
-      const startAt = new Date(data.start_at)
+      // DBから取り出した文字列に'Z'がつくとUTCになってしまうので削除。他にやり方あるきもするけどとりあえず。
+      const startAt = new Date(data.start_at.replace(/Z/g, ''))
       this.dialogItems.start_at = ('0' + startAt.getHours()).slice(-2) + ':' + ('0' + startAt.getMinutes()).slice(-2)
-      const endAt = new Date(data.end_at)
+      const endAt = new Date(data.end_at.replace(/Z/g, ''))
       this.dialogItems.end_at = ('0' + endAt.getHours()).slice(-2) + ':' + ('0' + endAt.getMinutes()).slice(-2)
     },
     renderCalendar () {
@@ -338,7 +339,13 @@ export default {
         }
       })
 
-      const registerdDate = { title: this.dialogItems.title, start_at: startAt }
+      const registerdDate = {
+        title: this.dialogItems.title,
+        content: this.dialogItems.content,
+        memo: this.dialogItems.memo,
+        start_at: startAt,
+        end_at: endAt
+      }
       this.justRegisteredDates.push(registerdDate)
       this.startDate = new Date(year, month, 1)
     }
