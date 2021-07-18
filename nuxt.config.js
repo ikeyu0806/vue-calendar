@@ -65,10 +65,12 @@ export default {
 
   apollo: {
     clientConfigs: {
-      default: {
-        httpEndpoint: 'http://localhost:3002/query',
-      }
+      default: '~/apollo.config.js'
     }
+  },
+
+  publicRuntimeConfig: {
+    baseUrl: process.env.BASE_URL
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
