@@ -33,6 +33,12 @@ $ yarn generate
 docker-compose up
 ```
 
+## direnv
+```
+direnv edit .
+export BASE_URL=http://localhost:3002/query
+```
+
 3001番ポートからアクセスできます。
 - http://localhost:3001/
 
