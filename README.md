@@ -1,9 +1,14 @@
 # vue-calendar
 Vue.js(Nuxt.js)で開発した自作のカレンダーサービスです。
 
+Vercelで公開しています。
+https://vue-calendar-plum.vercel.app/
+
 APIインターフェイスにはGraphQL、状態管理ライブラリにはVuexを使用しています。
 
 Golang製のバックエンドを[別リポジトリ](https://github.com/ikeyu0806/calendar-backend)で管理しています。
+バックエンドはHerokuで公開しています。
+https://whispering-retreat-77389.herokuapp.com/
 
 ## image
 <img width="1097" alt="スクリーンショット 2020-12-28 13 07 33" src="https://user-images.githubusercontent.com/30525452/103451068-99c48a80-4d02-11eb-8ba1-eb848e6246c6.png">
